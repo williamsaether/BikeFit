@@ -32,3 +32,4 @@ archive.zip
 
 data/mpii/mpii_human_pose_v1/images/*
 data/mpii/data.json
+data/mpii/dataset.h5
