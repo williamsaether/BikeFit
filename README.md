@@ -29,5 +29,24 @@ This project aims to develop a web application that helps cyclists optimize thei
 - Providing automatic recommendations for bike adjustments.
 - Implementing real-time video analysis.
 
+## Data Structure
+This is how the folder structure should look like for it to work (some files are generated from the code).
+```
+data
+│
+└─── mpii
+│    │   data.json
+│    │   joints.json
+│    │   train_dataset.h5
+│    │
+│    └─── mpii_human_pose_v1
+│         │   mpii_human_pose_v1_u12_1.mat
+│         │   ...
+│         │   
+│         └─── images
+│              │ {...}.jpg
+|
+```
+
 ---
 Stay tuned for more updates as the project progresses!
