@@ -48,5 +48,16 @@ data
 |
 ```
 
+## Requirements
+If you have an NVIDIA GPU (with CUDA support) on native Windows, you will need these:
+```
+numpy==1.21.3
+scipy==1.7.2
+opencv-python
+h5py
+matplotlib==3.8.4
+tensorflow-gpu==2.10.0
+```
+
 ---
 Stay tuned for more updates as the project progresses!
