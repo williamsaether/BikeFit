@@ -34,3 +34,6 @@ data/mpii/mpii_human_pose_v1/images/*
 data/mpii/data.json
 data/mpii/*.h5
 data/*.keras
+
+data/coco/*.json
+data/coco/*.h5
