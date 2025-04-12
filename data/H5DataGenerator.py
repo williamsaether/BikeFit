@@ -33,8 +33,9 @@ class H5DataGenerator(keras.utils.Sequence):
                     batch_heatmaps[i] = np.fliplr(batch_heatmaps[i])
 
                     flipped_heatmap = np.zeros_like(batch_heatmaps[i])
-                    for j, flipped_j in enumerate(self.flip_indices):
-                        flipped_heatmap[:, :, flipped_j] = batch_heatmaps[i][:, :, j]
+                    for left, right in self.flip_indices.items():
+                        flipped_heatmap[:, :, left] = batch_heatmaps[i][:, :, right]
+                        flipped_heatmap[:, :, right] = batch_heatmaps[i][:, :, left]
                     batch_heatmaps[i] = flipped_heatmap
 
         return batch_images, batch_heatmaps
