@@ -49,14 +49,33 @@ data
 ```
 
 ## Requirements
-If you have an NVIDIA GPU (with CUDA support) on native Windows, you will need these:
+If you have an NVIDIA GPU (with CUDA support) on native Windows (and wish to use GPU for training), you will need these:
 ```
+tensorflow-gpu==2.10.0
 numpy==1.21.3
 scipy==1.7.2
 opencv-python
 h5py
-matplotlib==3.8.4
-tensorflow-gpu==2.10.0
+matplotlib==3.7.5
+```
+A quick way to do this is like this:
+```
+conda create -n tf_gpu python=3.8 -y
+conda activate tf_gpu
+
+conda install jupyter notebook matplotlib scipy numpy h5py -y
+
+pip install tensorflow-gpu==2.10.0 keras==2.10.0 tensorflow-estimator==2.10.0 tensorboard==2.10.0 opencv-python pycocotools
+```
+
+For converting the model to TensorflowJS, we can create a new environment to keep it simple:
+```
+conda create -n tfjs python=3.10 -y
+conda activate tfjs
+
+conda install jupyter notebook
+
+pip install tensorflow==2.10.0 tensorflowjs==3.20.0
 ```
 
 ---
