@@ -11,14 +11,14 @@ This project aims to develop a web application that helps cyclists optimize thei
 
 ## Data
 - **Cyclist Detection Dataset:** TBD (Needs an open dataset with labeled cyclist images)
-- **Pose Estimation Dataset:** MPII Human Pose Dataset ([Link](http://human-pose.mpi-inf.mpg.de/))
+- **Pose Estimation Dataset:** MPII Human Pose Dataset ([Link](http://human-pose.mpi-inf.mpg.de/)) and COCO Dataset ([Link](https://cocodataset.org/#home))
 
 ## Models
 ### 1. Cyclist Detection
 - A pre-trained convolutional neural network (e.g., ResNet, MobileNet) fine-tuned for classifying images as containing a cyclist or not.
 
 ### 2. Pose Estimation
-- A deep learning model trained from scratch on MPII to predict joint locations.
+- A deep learning model trained from scratch on MPII or COCO to predict joint locations.
 - Potential architectures: Stacked Hourglass Network, HRNet, or another state-of-the-art pose estimation model.
 
 ### 3. Posture Evaluation
@@ -45,7 +45,18 @@ data
 │         │   
 │         └─── images
 │              │ {...}.jpg
-|
+│
+└─── coco
+│    │   joints.json
+│    │   person_keypoints_train2017.json
+│    │   person_keypoints_val2017.json
+│    │   
+│    └─── images
+│         └─── train2017
+│         │    │ {...}.jpg
+│         │
+│         └─── val2017
+│              │ {...}.jpg
 ```
 
 ## Requirements
@@ -75,7 +86,7 @@ conda activate tfjs
 
 conda install jupyter notebook
 
-pip install tensorflow==2.10.0 tensorflowjs==3.20.0
+pip install tensorflowjs==3.19.0
 ```
 
 ---
