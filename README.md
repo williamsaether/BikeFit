@@ -84,10 +84,9 @@ For converting the model to TensorflowJS, we can create a new environment to kee
 conda create -n tfjs python=3.10 -y
 conda activate tfjs
 
-conda install jupyter notebook
-
 pip install tensorflowjs==3.19.0
 ```
+and then you can convert it using tensorflowjs_converter in the CLI: `tensorflowjs_converter --input_format=keras --quantize_float16 ...`
 
 ---
 Stay tuned for more updates as the project progresses!
