@@ -4,14 +4,14 @@ import {createContext, ReactNode, useCallback, useContext, useEffect, useState} 
 import * as tf from '@tensorflow/tfjs'
 
 const modelURLs: Record<string, string> = {
-	default: 'https://h0n9zbco1ozxhkso.public.blob.vercel-storage.com/models/resnet/model-pSLdLZjgPMzxCqgyi3iE0fEjNs58yZ.json',
-	light: 'https://h0n9zbco1ozxhkso.public.blob.vercel-storage.com/models/basic/model-tRzd9NvAHbHg0xoCNAB9GaawLu1gWi.json'
+	default: 'https://h0n9zbco1ozxhkso.public.blob.vercel-storage.com/models/resnet/model.json',
+	light: 'https://h0n9zbco1ozxhkso.public.blob.vercel-storage.com/models/basic/model.json'
 }
 
-const modelCache: Record<string, tf.GraphModel> = {}
+const modelCache: Record<string, tf.LayersModel> = {}
 
 type ModelContextType = {
-	model: tf.GraphModel | null;
+	model: tf.LayersModel | null;
 	loading: boolean;
 	currentModelKey: string | null;
 	loadModelByKey: (key: string) => Promise<void>
@@ -19,14 +19,14 @@ type ModelContextType = {
 
 const ModelContext = createContext<ModelContextType>({
 	model: null,
-	loading: true,
+	loading: false,
 	currentModelKey: null,
 	loadModelByKey: async () => {}
 })
 
 export function ModelProvider({children}: {children: ReactNode}) {
-	const [model, setModel] = useState<tf.GraphModel | null>(null)
-	const [loading, setLoading] = useState(true)
+	const [model, setModel] = useState<tf.LayersModel | null>(null)
+	const [loading, setLoading] = useState(false)
 	const [currentModelKey, setCurrentModelKey] = useState<string | null>(null)
 
 	const loadModelByKey = useCallback(async (key: string) => {
@@ -41,17 +41,13 @@ export function ModelProvider({children}: {children: ReactNode}) {
 		if (modelCache[key]) { // in case you want to load a previously loaded model, we cache it
 			setModel(modelCache[key])
 		} else {
-			const loadedModel = await tf.loadGraphModel(modelURLs[key])
+			const loadedModel = await tf.loadLayersModel(modelURLs[key])
 			modelCache[key] = loadedModel
 			setModel(loadedModel)
 		}
 
 		setLoading(false)
 	}, [])
-
-	useEffect(() => {
-		loadModelByKey('default')
-	}, [loadModelByKey])
 
 	return (
 		<ModelContext.Provider value={{ model, loading, currentModelKey, loadModelByKey}}>
