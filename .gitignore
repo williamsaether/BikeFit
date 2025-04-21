@@ -38,3 +38,5 @@ data/mpii/*.h5
 
 data/coco/*.json
 data/coco/*.h5
+
+data/tfjs_model.idea/

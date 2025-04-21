@@ -1,6 +1,6 @@
 'use client';
 
-import React, {useCallback, useRef, useState} from 'react';
+import React, {use, useCallback, useRef, useState} from 'react';
 import {useModelContext} from "@/context/ModelContext";
 import * as tf from "@tensorflow/tfjs";
 import {preprocessImage} from "@/lib/preprocessImage";
@@ -25,28 +25,29 @@ export default function Main() {
 		img.src = imageSrc
 		img.onload = () => {
 			const tensor = tf.browser.fromPixels(img)
-			const { image, scale, pad } = preprocessImage(tensor, 256)
+			const useInt = currentModelKey !== null && currentModelKey.startsWith('movenet')
+			const imageSize = currentModelKey?.endsWith('lightning') ? 192 : 256
+			const image = preprocessImage(tensor, imageSize, useInt)
 			const pred = model.predict(image) as tf.Tensor4D
-			const heatmaps = pred.squeeze() as tf.Tensor3D
-			canvasRef.current && plotJoints(canvasRef.current, img, heatmaps, scale, pad)
+			canvasRef.current && plotJoints(canvasRef.current, img, pred, useInt)
 		}
 	}
 
 	const plotJoints = async (
 		canvas: HTMLCanvasElement,
 		image: HTMLImageElement,
-		predictions: tf.Tensor3D,
-		scale: number,
-		pad: { padTop: number, padBottom: number, padLeft: number, padRight: number }
+		predictions: tf.Tensor4D,
+		moveNetModel: boolean,
 	) => {
-		let joints = await extractJoints(predictions)
+		let joints = await extractJoints(predictions, image.naturalWidth, 64)
 
-		joints = joints.map(([x, y]) => {
-			x = (x - pad.padLeft) / scale
-			y = (y - pad.padTop) / scale
-			return [x, y]
-		})
-
+		if (moveNetModel) {
+			joints = joints.slice(5) // skip the head
+			joints = joints.map(([x, y]) => [
+				x * image.naturalWidth,
+				y * image.naturalHeight
+			])
+		}
 
 		const leftSide = joints[4][0] < joints[6][0]
 		let skeleton: number[][]
@@ -100,12 +101,12 @@ export default function Main() {
 					{/*<Bikefit />*/}
 					<button onClick={() => loadModelByKey('default')}>{loading ? 'Loading...' : 'Load Model'}</button>
 					<button onClick={() => loadModelByKey('light')}>{loading ? 'Loading...' : 'Load Light Model'}</button>
+					<button onClick={() => loadModelByKey('movenet_thunder')}>{loading ? 'Loading...' : 'Load MoveNet Thunder Model'}</button>
+					<button onClick={() => loadModelByKey('movenet_lightning')}>{loading ? 'Loading...' : 'Load MoveNet Lightning Model'}</button>
 					<UploadAndCrop onImageCropped={handleCroppedImage} />
 					{imageSrc && <img src={imageSrc}  alt={'Cropped'}/>}
 					<button onClick={predict}>Predict</button>
-					<canvas
-						ref={canvasRef}
-					/>
+					<canvas ref={canvasRef}/>
 				</>
 			}
 		</div>
