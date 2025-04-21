@@ -1,114 +1,112 @@
 'use client';
-import Bikefit from './Bikefit'
-import UserImage from '../components/ImageUpload'
+
 import React, {useCallback, useRef, useState} from 'react';
 import {useModelContext} from "@/context/ModelContext";
 import * as tf from "@tensorflow/tfjs";
 import {preprocessImage} from "@/lib/preprocessImage";
-import Dropzone, {useDropzone} from 'react-dropzone';
-import accept from "attr-accept";
-import {image} from "@tensorflow/tfjs";
 import {extractJoints} from "@/lib/processPrediction";
-
+import UploadAndCrop from "../components/ImageUpload";
 
 export default function Main() {
-  const { model, loading, loadModelByKey, currentModelKey } = useModelContext()
-  const [file, setFile] = useState<File | null>(null)
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
-  const [startBikefit, setStartBikefit] = useState(false);
-  const canvasRef = useRef(null)
+	const { model, loading, loadModelByKey, currentModelKey } = useModelContext()
+	const [imageSrc, setImageSrc] = useState<string | null>(null)
+	const [startBikefit, setStartBikefit] = useState(false);
+	const canvasRef = useRef(null)
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    const uploaded = acceptedFiles[0]
-    if (uploaded) {
-      setFile(uploaded)
-      setPreviewUrl(URL.createObjectURL(uploaded))
-    }
-  }, [])
+	const handleStart = () => setStartBikefit(true)
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    accept: { 'image/*': [] },
-    multiple: false,
-  });
+	const handleCroppedImage = async (blob: Blob) => {
+		setImageSrc(URL.createObjectURL(blob))
+	}
 
-  const handleStart = () => setStartBikefit(true);
+	const predict = () => {
+		if (!imageSrc || !model) return
+		const img = new Image()
+		img.src = imageSrc
+		img.onload = () => {
+			const tensor = tf.browser.fromPixels(img)
+			const { image, scale, pad } = preprocessImage(tensor, 256)
+			const pred = model.predict(image) as tf.Tensor4D
+			const heatmaps = pred.squeeze() as tf.Tensor3D
+			canvasRef.current && plotJoints(canvasRef.current, img, heatmaps, scale, pad)
+		}
+	}
 
-  const handleImageChange = () => {
-    if (!file || !model) {
-      console.log(file)
-      console.log(model)
-      return
-    }
-    const img = new Image();
-    img.src = URL.createObjectURL(file)
-    img.onload = () => {
-      const tensor = tf.browser.fromPixels(img)
-      const { image, pad, scale } = preprocessImage(tensor, 256)
-      const pred = model.predict(image) as tf.Tensor4D
-      const heatmaps = pred.squeeze() as tf.Tensor3D
-      console.log(pred)
-      canvasRef.current && plotJoints(canvasRef.current, img, heatmaps)
-    };
-  };
+	const plotJoints = async (
+		canvas: HTMLCanvasElement,
+		image: HTMLImageElement,
+		predictions: tf.Tensor3D,
+		scale: number,
+		pad: { padTop: number, padBottom: number, padLeft: number, padRight: number }
+	) => {
+		let joints = await extractJoints(predictions)
 
-  const plotJoints = async (canvas: HTMLCanvasElement, image: HTMLImageElement, predictions: tf.Tensor3D) => {
-    const coords = await extractJoints(predictions)
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-    ctx.clearRect(0, 0, canvas.width, canvas.height)
-    ctx.drawImage(image, 0, 0, canvas.width, canvas.height)
-    ctx.fillStyle = 'red'
-    coords.forEach(([x, y]) => {
-      ctx.beginPath()
-      ctx.arc(x, y, 4, 0, 2*Math.PI)
-      ctx.fill()
-    })
-  }
+		joints = joints.map(([x, y]) => {
+			x = (x - pad.padLeft) / scale
+			y = (y - pad.padTop) / scale
+			return [x, y]
+		})
 
-  return (
-    <div>
-      {!startBikefit ? (
-        <>
-          <h1>Hello</h1>
-          <p>This is a blablabla...</p>
-          <button
-            onClick={handleStart}
-          >
-            Start Bikefit
-          </button>
-        </>
-      ) :
-        <>
-          <Bikefit />
-          <button onClick={() => loadModelByKey('default')}>{loading ? 'Loading...' : 'Load Model'}</button>
-          <div
-            {...getRootProps()}
-            style={{
-              border: '2px dashed gray',
-              padding: '2rem',
-              marginBottom: '1rem',
-              textAlign: 'center',
-              cursor: 'pointer'
-            }}
-          >
-            <input {...getInputProps()} />
-            {isDragActive ? (
-              <p>Drop the image here...</p>
-            ) : (
-              <p>Drag & drop an image, or click to select</p>
-            )}
-          </div>
-          <button onClick={handleImageChange}>Predict</button>
 
-          <canvas
-            ref={canvasRef}
-            width={256}
-            height={256}
-          />
-          </>
-          }
+		const leftSide = joints[4][0] < joints[6][0]
+		let skeleton: number[][]
 
-    </div>
-  );
+		if (leftSide) skeleton = [[0, 2], [2, 4], [0, 6], [6, 8], [8, 10]]
+		else skeleton = [[1, 3], [3, 5], [1, 7], [7, 9], [9, 11]]
+
+		const ctx = canvas.getContext('2d')
+		if (!ctx) return
+
+		canvas.width = image.naturalWidth
+		canvas.height = image.naturalHeight
+
+		ctx.clearRect(0, 0, canvas.width, canvas.height)
+		ctx.drawImage(image, 0, 0, canvas.width, canvas.height)
+
+		ctx.lineWidth = 2
+		ctx.strokeStyle = 'white'
+		skeleton.forEach(([x, y]) => {
+			const pt1 = joints[x]
+			const pt2 = joints[y]
+			ctx.beginPath()
+			ctx.moveTo(pt1[0], pt1[1])
+			ctx.lineTo(pt2[0], pt2[1])
+			ctx.stroke()
+		})
+
+		ctx.fillStyle = 'red'
+		joints.forEach(([x, y], index) => {
+			if (index % 2 == (leftSide ? 0 : 1)) {
+				ctx.beginPath()
+				ctx.arc(x, y, 4, 0, 2*Math.PI)
+				ctx.fill()
+			}
+		})
+	}
+
+	return (
+		<div>
+			{!startBikefit ?
+				<>
+					<h1>Hello</h1>
+					<p>This is a blablabla...</p>
+					<button
+						onClick={handleStart}
+					>
+						Start Bikefit
+					</button>
+				</> :
+				<>
+					{/*<Bikefit />*/}
+					<button onClick={() => loadModelByKey('default')}>{loading ? 'Loading...' : 'Load Model'}</button>
+					<UploadAndCrop onImageCropped={handleCroppedImage} />
+					{imageSrc && <img src={imageSrc}  alt={'Cropped'}/>}
+					<button onClick={predict}>Predict</button>
+					<canvas
+						ref={canvasRef}
+					/>
+				</>
+			}
+		</div>
+	);
 }

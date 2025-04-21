@@ -1,11 +1,14 @@
 import * as tf from '@tensorflow/tfjs'
-export function preprocessImage(image: tf.Tensor3D, size: number) {
-  const [origHeight, origWidth] = image.shape.slice(0,2)
-  const scale = Math.min(size / origWidth, size / origHeight)
-  const newWidth = Math.floor(origWidth * scale)
-  const newHeight = Math.floor(origHeight * scale)
 
-  const resized = tf.image.resizeBilinear(image, [newHeight, newWidth])
+export function preprocessImage(image: tf.Tensor3D, size: number) {
+  image = tf.reverse(image, -1) // convert to BGR
+  const [origHeight, origWidth] = image.shape.slice(0,2)
+  const scale = size / Math.max(origWidth, origHeight)
+
+  const newWidth = Math.round(origWidth * scale)
+  const newHeight = Math.round(origHeight * scale)
+
+  const resized = tf.image.resizeBilinear(image, [newHeight, newWidth], true)
 
   const padX = size - newWidth
   const padY = size - newHeight
