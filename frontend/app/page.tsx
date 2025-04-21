@@ -99,6 +99,7 @@ export default function Main() {
 				<>
 					{/*<Bikefit />*/}
 					<button onClick={() => loadModelByKey('default')}>{loading ? 'Loading...' : 'Load Model'}</button>
+					<button onClick={() => loadModelByKey('light')}>{loading ? 'Loading...' : 'Load Light Model'}</button>
 					<UploadAndCrop onImageCropped={handleCroppedImage} />
 					{imageSrc && <img src={imageSrc}  alt={'Cropped'}/>}
 					<button onClick={predict}>Predict</button>
