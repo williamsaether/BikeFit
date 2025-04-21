@@ -81,12 +81,12 @@ pip install tensorflow-gpu==2.10.0 keras==2.10.0 tensorflow-estimator==2.10.0 te
 
 For converting the model to TensorflowJS, we can create a new environment to keep it simple:
 ```
-conda create -n tfjs python=3.10 -y
+conda create -n tfjs python=3.8.12 -y
 conda activate tfjs
 
 pip install tensorflowjs==3.19.0
 ```
-and then you can convert it using tensorflowjs_converter in the CLI: `tensorflowjs_converter --input_format=keras --quantize_float16 ...`
+and then you can convert it using tensorflowjs_converter in the CLI: `tensorflowjs_converter --input_format=keras --quantize_float16 --weight_shard_size_bytes=50000000 {model} {targetDir}`
 
 ---
 Stay tuned for more updates as the project progresses!
