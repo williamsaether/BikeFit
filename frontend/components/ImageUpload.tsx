@@ -6,6 +6,7 @@ import Cropper from "react-easy-crop";
 import {useDropzone} from "react-dropzone";
 import {Button, Slider} from "@mui/material";
 import getCroppedImage from "@/lib/utils";
+import styles from './ImageUpload.module.css'
 
 interface Props {
   onImageCropped: (blob: Blob) => void;
@@ -44,16 +45,9 @@ export default function UploadAndCrop({ onImageCropped }: Props) {
   }, [imageSrc, croppedAreaPixels])
 
   return (
-    <div>
-      <div
+    <div className={styles.imagePrep}>
+      <div className={styles.dragAndDrop}
         {...getRootProps()}
-        style={{
-          border: '2px dashed gray',
-          padding: '2rem',
-          marginBottom: '1rem',
-          textAlign: 'center',
-          cursor: 'pointer'
-        }}
       >
         <input {...getInputProps()} />
         {isDragActive ? (
@@ -64,25 +58,31 @@ export default function UploadAndCrop({ onImageCropped }: Props) {
       </div>
 
       {imageSrc &&
-        <div>
-          <Cropper
-            image={imageSrc}
-            crop={crop}
-            zoom={zoom}
-            aspect={1}
-            onCropChange={setCrop}
-            onZoomChange={setZoom}
-            onCropComplete={onCropComplete}
-          />
+        <div className={styles.Main}>
+          <div className={styles.cropperAndSlider}>
+              <div className={styles.cropper}>
+                <Cropper
+                image={imageSrc}
+                crop={crop}
+                zoom={zoom}
+                aspect={1}
+                onCropChange={setCrop}
+                onZoomChange={setZoom}
+                onCropComplete={onCropComplete}
+                />
+              </div>
 
-          <Slider
-            value={zoom}
-            min={1}
-            max={5}
-            step={.1}
-            onChange={(_, x) => setZoom(x)}
-          />
-          <Button onClick={handleCrop} variant='contained' color='primary'>Crop</Button>
+
+            <Slider
+              value={zoom}
+              min={1}
+              max={5}
+              step={.1}
+              onChange={(_, x) => setZoom(x)}
+            />
+
+            <Button onClick={handleCrop} variant='contained' color='primary'>Crop</Button>
+          </div>
         </div>
       }
     </div>

@@ -1,0 +1,62 @@
+.defaultStyle {
+    padding: 2em;
+    background-color: var(--color-background);
+}
+
+.loadModelsBtn button{
+    background-color: white;
+}
+
+.header {
+    color: var(--color-text);
+    font-size: 1.5em;
+}
+
+.tutorial {
+    background-color: var(--color-primary);
+    border-radius: 1em;
+    padding: 1.5em;
+    border: 0.25em solid var(--color-secondary);
+    gap: 2em;
+
+}
+
+.tutContent {
+    display: flex;
+    gap: 2em;
+    margin: 0 auto;
+}
+
+.tutContent p {
+    flex: 1;
+    line-height: 1.6em;
+}
+
+.examplePic {
+    width: 30em;
+    height: auto;
+}
+
+.imageHandeling {
+    margin-top: 5em;
+}
+
+.imageHandeling canvas {
+    height: 90%;
+    width: 90%;
+}
+
+.croppedImage {
+    height: 365px;
+    width: 365px;
+}
+
+.imagePrep {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 1em;
+    gap: 1em;
+}
+
+

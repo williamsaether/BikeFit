@@ -1,20 +1,18 @@
 'use client';
 
+import exampleImage from '../public/examplepic.jpg'
 import React, {use, useCallback, useRef, useState} from 'react';
 import {useModelContext} from "@/context/ModelContext";
 import * as tf from "@tensorflow/tfjs";
 import {preprocessImage} from "@/lib/preprocessImage";
 import {extractJoints} from "@/lib/processPrediction";
 import UploadAndCrop from "../components/ImageUpload";
+import styles from './page.module.css'
 
 export default function Main() {
 	const { model, loading, loadModelByKey, currentModelKey } = useModelContext()
 	const [imageSrc, setImageSrc] = useState<string | null>(null)
-	const [startBikefit, setStartBikefit] = useState(false);
 	const canvasRef = useRef(null)
-
-	const handleStart = () => setStartBikefit(true)
-
 	const handleCroppedImage = async (blob: Blob) => {
 		setImageSrc(URL.createObjectURL(blob))
 	}
@@ -86,29 +84,41 @@ export default function Main() {
 	}
 
 	return (
-		<div>
-			{!startBikefit ?
-				<>
-					<h1>Hello</h1>
-					<p>This is a blablabla...</p>
-					<button
-						onClick={handleStart}
-					>
-						Start Bikefit
-					</button>
-				</> :
-				<>
-					{/*<Bikefit />*/}
-					<button onClick={() => loadModelByKey('default')}>{loading ? 'Loading...' : 'Load Model'}</button>
-					<button onClick={() => loadModelByKey('light')}>{loading ? 'Loading...' : 'Load Light Model'}</button>
-					<button onClick={() => loadModelByKey('movenet_thunder')}>{loading ? 'Loading...' : 'Load MoveNet Thunder Model'}</button>
-					<button onClick={() => loadModelByKey('movenet_lightning')}>{loading ? 'Loading...' : 'Load MoveNet Lightning Model'}</button>
-					<UploadAndCrop onImageCropped={handleCroppedImage} />
-					{imageSrc && <img src={imageSrc}  alt={'Cropped'}/>}
-					<button onClick={predict}>Predict</button>
-					<canvas ref={canvasRef}/>
-				</>
-			}
-		</div>
+		<>
+			<div className={styles.defaultStyle}>
+				<div className={styles.header}>
+					<h1>Bike fitting</h1>
+				</div>
+				<div className={styles.tutorial}>
+					<h1>How to start do the bikefitting</h1>
+					<div className={styles.tutContent}>
+						<p>To start your bikefit, you first have to choose a model to download.
+						You will also have to take a picture from the side, like shown in the examplepicture.
+						Crop the image so you get the whole bike into frame.
+						Once you are happy you can start the bikefit application and start to tweak on your bike</p>
+						<img src={"/examplepic.jpg"} className={styles.examplePic} alt={'Example gone'}/>
+					</div>
+					<div className={styles.loadModeltxt}>
+						<p>Here you can choose between the model</p>
+					</div>
+					<div className={styles.loadModelsBtn}>
+						<button  onClick={() => loadModelByKey('default')}>{loading ? 'Loading...' : 'Load Model'}</button>
+						<button onClick={() => loadModelByKey('light')}>{loading ? 'Loading...' : 'Load Light Model'}</button>
+						<button onClick={() => loadModelByKey('movenet_thunder')}>{loading ? 'Loading...' : 'Load MoveNet Thunder Model'}</button>
+						<button onClick={() => loadModelByKey('movenet_lightning')}>{loading ? 'Loading...' : 'Load MoveNet Lightning Model'}</button>
+					</div>
+				</div>
+				<div className={styles.imageHandeling}>
+					<div className={styles.imagePrep}>
+						<UploadAndCrop onImageCropped={handleCroppedImage} />
+						{imageSrc && <img src={imageSrc} alt={'Cropped'} className={styles.croppedImage}/>}
+					</div>
+					<div>
+						<button onClick={predict}>Predict</button>
+					</div>
+					<canvas className={styles.canvas} ref={canvasRef} />
+				</div>
+			</div>
+		</>
 	);
 }
