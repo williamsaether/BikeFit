@@ -25,9 +25,11 @@ export default function RootLayout({children}: {children: ReactNode}) {
 						</div>
 					</nav>
 				</header>
-				<ModelProvider>
-					{children}
-				</ModelProvider>
+				<main className={styles.main}>
+					<ModelProvider>
+						{children}
+					</ModelProvider>
+				</main>
 			</body>
 		</html>
 	)

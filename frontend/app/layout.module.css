@@ -1,6 +1,12 @@
 .header {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: calc(100% - 2em);
 	height: 5em;
+	background: var(--color-background);
 	padding: 0 1em;
+	z-index: 10;
 }
 
 .header nav {
@@ -31,4 +37,8 @@
 	padding: .6em 1em;
 	border-radius: 10em;
 	color: #fff !important;
+}
+
+.main {
+	margin-top: 5em;
 }

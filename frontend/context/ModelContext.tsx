@@ -19,7 +19,8 @@ type ModelContextType = {
 	model: SupportedModel | null;
 	loading: boolean;
 	currentModelKey: string | null;
-	loadModelByKey: (key: string) => Promise<void>
+	loadModelByKey: (key: string) => Promise<void>;
+	cachedModels: Record<string, SupportedModel>;
 }
 
 const modelURLs: Record<string, string> = {
@@ -35,13 +36,15 @@ const ModelContext = createContext<ModelContextType>({
 	model: null,
 	loading: false,
 	currentModelKey: null,
-	loadModelByKey: async () => {}
+	loadModelByKey: async () => {},
+	cachedModels: {},
 })
 
 export function ModelProvider({children}: {children: ReactNode}) {
 	const [model, setModel] = useState<SupportedModel | null>(null)
 	const [loading, setLoading] = useState(false)
 	const [currentModelKey, setCurrentModelKey] = useState<string | null>(null)
+	const [cachedModels, setCachedModels] = useState<Record<string, SupportedModel>>({})
 
 	const loadModelByKey = useCallback(async (key: string) => {
 		if (!modelURLs[key]) {
@@ -64,11 +67,13 @@ export function ModelProvider({children}: {children: ReactNode}) {
 			setModel(loadedModel)
 		}
 
+		setCachedModels(modelCache)
+
 		setLoading(false)
 	}, [])
 
 	return (
-		<ModelContext.Provider value={{ model, loading, currentModelKey, loadModelByKey}}>
+		<ModelContext.Provider value={{ model, loading, currentModelKey, loadModelByKey, cachedModels}}>
 			{children}
 		</ModelContext.Provider>
 	)
