@@ -1,9 +1,14 @@
 :root {
-    --color-primary: #e63946;
+    --color-primary: #e8111f;
     --color-secondary: #1d1d1f;
-    --color-background: #f3f4f6;
+    --color-background: #ffffff;
     --color-text: #111827;
     --color-detail: #ffcc00;
     --button-hover: #b91c1c;
 }
 
+body {
+    font-family: "Segoe UI", serif;
+    margin: 0;
+    background: var(--color-background);
+}

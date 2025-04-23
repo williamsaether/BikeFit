@@ -1,0 +1,89 @@
+.page {
+	padding: 1em 2em;
+}
+
+.loadModelsBtn button{
+	background-color: white;
+}
+
+.header {
+	color: var(--color-text);
+	font-size: 1.5em;
+}
+
+.tutorial {
+	gap: 2em;
+}
+
+.tutDropdown {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: .8em .5em;
+	position: relative;
+	cursor: pointer;
+	user-select: none;
+}
+
+.tutDropdown:after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height: 1px;
+	background: var(--color-text);
+	opacity: .3;
+}
+
+.tutDropdown p {
+	font-size: 1.3em;
+	margin: 0;
+}
+
+.tutDropdown img {
+	width: 1.5em;
+	height: auto;
+}
+
+.tutContent {
+	display: grid;
+	grid-template-columns: auto auto auto;
+	gap: 2em;
+	margin: 0 auto;
+	padding: 1em;
+}
+
+.tutContent p {
+	flex: 1;
+	line-height: 1.6em;
+}
+
+.tutContent img {
+	width: 20em;
+	height: auto;
+}
+
+.imageHandeling {
+	margin-top: 5em;
+}
+
+.imageHandeling canvas {
+	height: 90%;
+	width: 90%;
+}
+
+.croppedImage {
+	height: 365px;
+	width: 365px;
+}
+
+.imagePrep {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	margin: 1em;
+	gap: 1em;
+}
+
+
