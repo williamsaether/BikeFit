@@ -16,12 +16,32 @@ const models = new Map<string, string>([
 	['movenet_lightning', 'MoveNet Lightning'],
 ])
 
+const recommendedTopStrokeRanges: Record<string, [number, number]> = {
+	knee_angle: [105, 114],
+	hip_angle: [60, 69],
+	torso_angle: [42, 49],
+	shoulder_angle: [87, 94],
+	elbow_angle: [150, 169],
+}
+
+const recommendedBottomStrokeRanges: Record<string, [number, number]> = {
+	knee_angle: [32, 38],
+	hip_angle: [96, 104],
+	torso_angle: [37, 43],
+	shoulder_angle: [86, 93],
+	elbow_angle: [145, 175],
+}
+
+const colorMap = ['#0015ff','#00ff1e','#4252ff','#5effaf','#808aff','#b3ffd9','#ffb700','#ff0000','#ffcf54','#ff6161','#ffe49e','#ff9e9e']
+
 export default function Main() {
 	const { model, loading, loadModelByKey, currentModelKey, cachedModels } = useModelContext()
 	const [imageSrc, setImageSrc] = useState<string | null>(null)
 	const [openTutorial, setOpenTutorial] = useState(false)
 	const [selectedModel, setSelectedModel] = useState<string>('default')
 	const [joints, setJoints] = useState<number[][] | null>(null)
+	const [analyzeClicked, setAnalyzeClicked] = useState<boolean>(false)
+	const [analyze, setAnalyze] = useState<boolean>(false)
 
 	const canvasRef = useRef(null)
 
@@ -50,7 +70,6 @@ export default function Main() {
 		moveNetModel: boolean,
 	) => {
 		let joints = await extractJoints(predictions, image.naturalWidth, 64)
-		setJoints(joints)
 
 		if (moveNetModel) {
 			joints = joints.slice(5) // skip the head
@@ -59,6 +78,8 @@ export default function Main() {
 				y * image.naturalHeight
 			])
 		}
+
+		setJoints(joints)
 
 		const leftSide = joints[4][0] < joints[6][0]
 		let skeleton: number[][]
@@ -86,14 +107,18 @@ export default function Main() {
 			ctx.stroke()
 		})
 
-		ctx.fillStyle = 'red'
+
 		joints.forEach(([x, y], index) => {
 			if (index % 2 == (leftSide ? 0 : 1)) {
+				ctx.fillStyle = colorMap[index]
 				ctx.beginPath()
 				ctx.arc(x, y, 4, 0, 2*Math.PI)
 				ctx.fill()
 			}
 		})
+
+		setAnalyze(true)
+		setAnalyzeClicked(false)
 	}
 
 	const calculateAngle = (a: number[], b: number[], c: number[]): number => {
@@ -125,12 +150,44 @@ export default function Main() {
 		const horizontal: number[] = [hip[0] + 100, hip[1]];
 
 		return {
-			knee_angle: calculateAngle(hip, knee, ankle),
+			knee_angle: 180 - calculateAngle(hip, knee, ankle),
 			hip_angle: calculateAngle(shoulder, hip, knee),
-			torso_angle: calculateAngle(horizontal, hip, shoulder),
+			torso_angle: 180 - calculateAngle(horizontal, hip, shoulder),
 			shoulder_angle: calculateAngle(elbow, shoulder, hip),
 			elbow_angle: calculateAngle(shoulder, elbow, wrist),
 		};
+	}
+
+	const getRangeColor = (angle: number, [min, max]: [number, number]) => {
+		if (angle < min - 5 || angle > max + 5) return '#c30000'
+		if (angle < min || angle > max) return '#cda400'
+		return '#0c7700'
+	}
+
+	function AngleBar({ name, angle }: { name: string, angle: number }) {
+		const range = recommendedTopStrokeRanges[name];
+		const [min, max] = range;
+
+		// Position as a % within an extended range (min-10%, max+10%) for visual breathing room
+		const paddedMin = min - (max - min) * 0.5;
+		const paddedMax = max + (max - min) * 0.5;
+		const percent = Math.min(
+			99,
+			Math.max(1, ((angle - paddedMin) / (paddedMax - paddedMin)) * 100)
+		);
+
+		return (
+			<div className={styles.angleBar}>
+				<strong>
+					{name.replace('_', ' ')}: <span style={{color: getRangeColor(angle,range)}}>{angle.toFixed(1)}° </span>
+				</strong>
+				<span>
+					{`${min}°`}
+					<div className={styles.angleBackground}><div style={{left: `${percent}%`}}/></div>
+					{`${max}°`}
+				</span>
+			</div>
+		);
 	}
 
 	const showAngles = () => {
@@ -140,11 +197,11 @@ export default function Main() {
 		if (!angles) return
 
 		return (
-			<ul>
+			<div className={styles.angleWrapper}>
 				{Object.entries(angles).map(([name, angle]) => (
-					<li key={name}>{name}: {angle}</li>
+					<AngleBar key={name} name={name} angle={angle} />
 				))}
-			</ul>
+			</div>
 		)
 	}
 
@@ -216,16 +273,22 @@ export default function Main() {
 							<span>You need to load a model first!</span>
 						}
 						<button
-							onClick={predict}
+							onClick={() => {
+								setAnalyzeClicked(true)
+								predict()
+							}}
 							disabled={!Object.entries(cachedModels).at(0) || !imageSrc}
 							className={(!Object.entries(cachedModels).at(0)  || !imageSrc) ? styles.disabled : ''}
 						>
-							Analyze
+							{analyzeClicked ? 'Analyzing ...' : 'Analyze'}
 						</button>
 					</div>
-					<div className={styles.resultWrapper}>
-						<canvas className={styles.canvas} ref={canvasRef}/>
-						{joints && showAngles()}
+					<div className={`${styles.resultWrapper} ${analyze ? styles.open : ''}`}>
+						<div className={styles.result}>
+							<canvas className={styles.canvas} ref={canvasRef}/>
+							<h3>Top of Pedal Stroke</h3>
+							{joints && showAngles()}
+						</div>
 					</div>
 				</section>
 			</section>

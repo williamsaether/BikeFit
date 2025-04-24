@@ -84,7 +84,7 @@
 }
 
 .predictSection {
-	min-height: 90svh;
+	margin-bottom: 10em;
 }
 
 .predict {
@@ -114,15 +114,76 @@
 }
 
 .resultWrapper {
-	display: grid;
+	display: none;
 	padding: 2em 4em;
-	grid-template-columns: 1fr 1fr;
-	grid-template-rows: 30em;
-	gap: 4em;
+	/*grid-template-columns: 1fr 1fr;*/
+	/*gap: 4em;*/
+	justify-content: center;
 }
 
-.resultWrapper canvas {
+.resultWrapper.open {
+	display: grid;
+}
+
+.result {
+	display: grid;
+	grid-template-rows: 30em 2em auto;
+	gap: .6em;
+	justify-items: center;
+}
+
+.result canvas {
 	height: 100%;
+}
+
+.angleWrapper {
+	display: grid;
+	gap: .4em;
+}
+
+.angleBar {
+	display: grid;
+	gap: 2em;
+	grid-template-columns: 1fr minmax(12em, auto);
+}
+
+.angleBar strong {
+	display: grid;
+	grid-template-columns: auto auto;
+	gap: .4em;
+	align-items: center;
+}
+
+.angleBar span {
+	display: grid;
+	grid-template-columns: 2em 1fr 2em;
+	gap: .4em;
+	align-items: center;
+}
+
+.angleBackground {
+	position: relative;
+	height: .5em;
+	margin-top: .2em;
+	background: #FF0000;
+	background: linear-gradient(90deg,rgba(255, 0, 0, 1) 0%, rgba(219, 219, 0, 1) 15%, rgba(0, 168, 0, 1) 40%, rgba(0, 168, 0, 1) 60%, rgba(219, 219, 0, 1) 85%, rgba(255, 0, 0, 1) 100%);
+	border-radius: .4em;
+}
+
+.angleBackground div {
+	position: absolute;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	width: .8em;
+	height: .8em;
+	background: #000;
+	border-radius: 50%;
+}
+
+.rangeText {
+	font-size: .8em;
+	color: var(--color-secondary);
+	margin-top: .2em;
 }
 
 .rightModal {
