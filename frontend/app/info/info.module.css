@@ -1,0 +1,29 @@
+/* info.module.css */
+
+.container {
+	padding: 60px 80px;
+	max-width: 800px;
+	margin: 0 auto;
+}
+
+.heading {
+	font-size: 36px;
+	font-weight: bold;
+	margin-bottom: 20px;
+}
+
+.paragraph {
+	font-size: 18px;
+	line-height: 1.6;
+	margin-bottom: 20px;
+}
+
+.footerNote {
+	font-size: 16px;
+	font-style: italic;
+	color: gray;
+}
+
+.footerNote a, .paragraph a {
+	color: var(--color-primary);
+}

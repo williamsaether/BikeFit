@@ -1,0 +1,58 @@
+.wrapper {
+	width: 100%;
+	background-color: white;
+}
+
+.heroSection {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	background-color: #919191;
+	color: white;
+	padding: 60px 80px;
+	min-height: 60vh;
+	box-sizing: border-box;
+}
+
+.leftContent {
+	max-width: 600px;
+}
+
+.title {
+	font-size: 44px;
+	font-weight: bold;
+	margin-bottom: 20px;
+	line-height: 1.2;
+}
+
+.subtitle {
+	font-size: 18px;
+	margin-bottom: 30px;
+	line-height: 1.6;
+}
+
+.buttonGroup {
+	display: flex;
+	gap: 20px;
+}
+
+.ctaButton {
+	background-color: var(--color-detail);
+	color: var(--color-secondary);
+	border: none;
+	border-radius: 24px;
+	padding: 12px 24px;
+	font-weight: bold;
+	font-size: 16px;
+	cursor: pointer;
+	text-decoration: none;
+}
+
+.secondaryLink {
+	color: #ffffff;
+	text-decoration: underline;
+	font-weight: bold;
+	font-size: 16px;
+	align-self: center;
+}
