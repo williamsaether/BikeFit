@@ -1,0 +1,28 @@
+.feedback {
+	display: grid;
+	justify-content: space-evenly;
+	align-items: center;
+	margin-top: 1em;
+	justify-self: start;
+}
+
+.feedback > div {
+	display: grid;
+	grid-template-rows: min-content auto;
+	height: 100%;
+}
+
+.feedback strong {
+	font-size: 1.5em;
+}
+
+.feedback ul {
+	display: flex;
+	flex-direction: column;
+	gap: 1em;
+	margin: 1em 0;
+}
+
+.error {
+	color: #8e0000;
+}

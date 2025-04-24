@@ -1,6 +1,6 @@
 'use client';
 
-import React, {use, useCallback, useRef, useState} from 'react';
+import React, {use, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useModelContext} from "@/context/ModelContext";
 import * as tf from "@tensorflow/tfjs";
 import {preprocessImage} from "@/lib/preprocessImage";
@@ -8,6 +8,7 @@ import {extractJoints} from "@/lib/processPrediction";
 import UploadAndCrop from "@/components/ImageUpload";
 import styles from './page.module.css'
 import Image from "next/image";
+import FeedbackBox, {FeedbackBoxRef} from "@/components/FeedbackBox";
 
 const models = new Map<string, string>([
 	['default', 'ResNet50'],
@@ -42,11 +43,21 @@ export default function Main() {
 	const [joints, setJoints] = useState<number[][] | null>(null)
 	const [analyzeClicked, setAnalyzeClicked] = useState<boolean>(false)
 	const [analyze, setAnalyze] = useState<boolean>(false)
+	const [feedbackClicked, setFeedbackClicked] = useState<boolean>(false)
+
+	const [goal, setGoal] = useState<'comfort' | 'performance'>('performance')
+	const [issue, setIssue] = useState<string>('')
 
 	const canvasRef = useRef(null)
+	const feedbackRef = useRef<FeedbackBoxRef>(null)
 
 	const handleCroppedImage = async (blob: Blob) => {
 		setImageSrc(URL.createObjectURL(blob))
+	}
+
+	const handleFeedbackClick = () => {
+		setFeedbackClicked(true)
+		feedbackRef.current?.triggerFeedback()
 	}
 
 	const predict = () => {
@@ -135,10 +146,10 @@ export default function Main() {
 		return (angle * 180) / Math.PI;
 	}
 
-	const calculateAngles = (leftSide: boolean) => {
-		if (!joints) return
+	const calculateAngles = () => {
+		if (!joints) return null
 
-		const index = leftSide ? 0 : 1;
+		const index = joints[4][0] < joints[6][0] ? 0 : 1;
 
 		const shoulder = joints[index]
 		const elbow = joints[index + 2]
@@ -157,6 +168,11 @@ export default function Main() {
 			elbow_angle: calculateAngle(shoulder, elbow, wrist),
 		};
 	}
+
+	const angles: Record<string, number> | null = useMemo(() => {
+		if (!joints) return null
+		return calculateAngles()
+	}, [joints])
 
 	const getRangeColor = (angle: number, [min, max]: [number, number]) => {
 		if (angle < min - 5 || angle > max + 5) return '#c30000'
@@ -191,10 +207,7 @@ export default function Main() {
 	}
 
 	const showAngles = () => {
-		if (!joints) return
-
-		const angles = calculateAngles(joints[4][0] < joints[6][0])
-		if (!angles) return
+		if (!joints || !angles) return
 
 		return (
 			<div className={styles.angleWrapper}>
@@ -211,7 +224,7 @@ export default function Main() {
 				<h1 className={styles.title}>Get Your BikeFit Today!</h1>
 				<p className={styles.description}>
 					Let's get started on your BikeFit! You should take a quick
-					peek at the <span onClick={() => setOpenTutorial(true)}>tutorial</span> before jumping into it!
+					peek at the <span onClick={() => setOpenTutorial(true)}>GUIDE</span> before jumping into it!
 				</p>
 				<div className={styles.models}>
 					<h2>Choose your model</h2>
@@ -289,6 +302,33 @@ export default function Main() {
 							<h3>Top of Pedal Stroke</h3>
 							{joints && showAngles()}
 						</div>
+						<div className={`${styles.recommendations} ${feedbackClicked ? styles.results : ''}`}>
+							<div className={styles.top}>
+								<div>
+									<label>
+										Fit Goal:
+										<select value={goal} onChange={(e) => setGoal(e.target.value as 'comfort' | 'performance')}>
+											<option value="comfort">Comfort</option>
+											<option value="performance">Performance</option>
+										</select>
+									</label>
+
+									<label>
+										Known Issue (optional):
+										<input
+											type="text"
+											placeholder="e.g. knee pain, lower back pain"
+											maxLength={40}
+											value={issue}
+											onChange={(e) => setIssue(e.target.value)}
+										/>
+									</label>
+								</div>
+								<button onClick={handleFeedbackClick}>Analyze Fit</button>
+								<p>Please ensure you followed the guide before analyzing.</p>
+							</div>
+							{feedbackClicked && angles && <FeedbackBox ref={feedbackRef} angles={angles} goal={goal} issue={issue}/>}
+						</div>
 					</div>
 				</section>
 			</section>
@@ -296,19 +336,19 @@ export default function Main() {
         <Image
           src={'/icons/cross.svg'}
           width={24}
-					height={24}
-					alt={'Close Tutorial'}
-					className={styles.cross}
-					onClick={() => {
+          height={24}
+          alt={'Close Tutorial'}
+          className={styles.cross}
+          onClick={() => {
 						setOpenTutorial(false)
 					}}
-				/>
-				<h2>How to get started!</h2>
-				<div>
-					<h3>Model Selection</h3>
-					<p>You can choose between these models:</p>
-					<ul>
-						<li>Large ResNet</li>
+        />
+        <h2>How to get started!</h2>
+        <div>
+          <h3>Model Selection</h3>
+          <p>You can choose between these models:</p>
+          <ul>
+            <li>Large ResNet</li>
 						<li>Light Basic</li>
 						<li>MoveNet Thunder (heavy but accurate)</li>
 						<li>MoveNet Lightning (light and fast)</li>
@@ -335,7 +375,7 @@ export default function Main() {
 			{!openTutorial && <div
 				className={styles.openTutorial}
 				onClick={() => setOpenTutorial(true)}
-			>Open Tutorial</div>}
+			>GUIDE</div>}
 		</div>
 	);
 }

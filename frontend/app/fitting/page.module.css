@@ -116,8 +116,8 @@
 .resultWrapper {
 	display: none;
 	padding: 2em 4em;
-	/*grid-template-columns: 1fr 1fr;*/
-	/*gap: 4em;*/
+	grid-template-columns: 1fr 1fr;
+	gap: 2em;
 	justify-content: center;
 }
 
@@ -184,6 +184,68 @@
 	font-size: .8em;
 	color: var(--color-secondary);
 	margin-top: .2em;
+}
+
+.recommendations {
+	display: grid;
+	grid-template-rows: min-content auto;
+	padding: 1em;
+	border-radius: 2em;
+	border: 1px solid #00000066;
+	align-content: center;
+	justify-items: center;
+}
+
+.recommendations.results {
+	grid-template-rows: min-content 1fr;
+}
+
+.recommendations.results .top {
+	justify-self: start;
+}
+
+.recommendations .top {
+	display: grid;
+	grid-template-rows: auto auto;
+	grid-template-columns: min-content auto;
+	align-items: center;
+	gap: .6em;
+}
+
+.recommendations .top > div {
+	grid-column-start: 1;
+	grid-column-end: 3;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	gap: .2em
+}
+
+.recommendations .top select, .recommendations .top input {
+	padding: .2em;
+	margin-left: .4em;
+	border-radius: .4em;
+	border: 1px solid black;
+}
+
+.recommendations .top input {
+	width: 14em;
+}
+
+.recommendations .top button {
+	all: unset;
+	cursor: pointer;
+	padding: .6em 1em;
+	border-radius: 10em;
+	background: var(--color-secondary);
+	color: var(--color-background);
+	grid-row-start: 2;
+	white-space: nowrap;
+}
+
+.recommendations .top p {
+	font-size: .8em;
+	grid-row-start: 2
 }
 
 .rightModal {

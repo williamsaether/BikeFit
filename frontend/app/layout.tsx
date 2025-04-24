@@ -20,7 +20,7 @@ export default function RootLayout({children}: {children: ReactNode}) {
 						</div>
 						<div>
 							<a href={'/'}>Home</a>
-							<a href={'/fitting'}>Info</a>
+							<a href={'/info'}>Info</a>
 							<a href={'/fitting'} className={styles.headerButton}>Get Started</a>
 						</div>
 					</nav>

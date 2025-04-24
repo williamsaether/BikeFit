@@ -16,6 +16,7 @@
     "@tensorflow/tfjs-backend-webgl": "^4.22.0",
     "cropperjs": "^1.5.13",
     "next": "15.3.0",
+    "openai": "^4.96.0",
     "react": "^19.0.0",
     "react-cropper": "^2.3.3",
     "react-dom": "^19.0.0",
