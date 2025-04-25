@@ -1,5 +1,7 @@
 # Bike Fitting Web Application
 
+Live App: https://bikefit.bysaether.com
+
 ## Project Overview
 This project aims to develop a web application that helps cyclists optimize their posture for better performance and injury prevention. The system will analyze images or videos of cyclists and provide feedback on their positioning.
 
@@ -10,19 +12,21 @@ This project aims to develop a web application that helps cyclists optimize thei
 - **Web-Based Interface**: Users can upload images/videos and receive real-time feedback.
 
 ## Data
-- **Cyclist Detection Dataset:** TBD (Needs an open dataset with labeled cyclist images)
 - **Pose Estimation Dataset:** MPII Human Pose Dataset ([Link](http://human-pose.mpi-inf.mpg.de/)) and COCO Dataset ([Link](https://cocodataset.org/#home))
 
 ## Models
-### 1. Cyclist Detection
-- A pre-trained convolutional neural network (e.g., ResNet, MobileNet) fine-tuned for classifying images as containing a cyclist or not.
 
-### 2. Pose Estimation
-- A deep learning model trained from scratch on MPII or COCO to predict joint locations.
-- Potential architectures: Stacked Hourglass Network, HRNet, or another state-of-the-art pose estimation model.
+### 1. Pose Estimation
+- Deep learning model trained from scratch on COCO to predict joint locations.
+  - Simple Custom CNN
+  - Pretrained ResNet-50 Backbone
+- MoveNet Lightning & Thunder
 
-### 3. Posture Evaluation
-- A rule-based algorithm that calculates joint angles and determines whether the posture aligns with biomechanical guidelines.
+### 2. Posture Evaluation
+- A rule-based algorithm that calculates joint angles and determines whether the posture aligns with biomechanical guidelines (based on MyVeloFit guidelines).
+
+### 3. OpenAI API - GPT-4.0
+- Web app retrieves feedback from a GPT-4.0 model for user bike fit recommendations.
 
 ## Future Enhancements
 - Fine-tuning the model with cyclist-specific data.
