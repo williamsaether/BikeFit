@@ -21,6 +21,8 @@ async function getBikeFitFeedback(angles: Record<string, number>, goal: string, 
 				type: 'road',
 				position: 'top'
 			},
+			goal,
+			issue,
 		}),
 	})
 
