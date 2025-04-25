@@ -149,7 +149,8 @@ export default function Main() {
 	const calculateAngles = () => {
 		if (!joints) return null
 
-		const index = joints[4][0] < joints[6][0] ? 0 : 1;
+		const leftSide = joints[4][0] < joints[6][0]
+		const index = leftSide ? 0 : 1;
 
 		const shoulder = joints[index]
 		const elbow = joints[index + 2]
@@ -163,7 +164,7 @@ export default function Main() {
 		return {
 			knee_angle: 180 - calculateAngle(hip, knee, ankle),
 			hip_angle: calculateAngle(shoulder, hip, knee),
-			torso_angle: 180 - calculateAngle(horizontal, hip, shoulder),
+			torso_angle: leftSide ? 180 - calculateAngle(horizontal, hip, shoulder) : calculateAngle(horizontal, hip, shoulder),
 			shoulder_angle: calculateAngle(elbow, shoulder, hip),
 			elbow_angle: calculateAngle(shoulder, elbow, wrist),
 		};
@@ -226,6 +227,7 @@ export default function Main() {
 					Let's get started on your BikeFit! You should take a quick
 					peek at the <span onClick={() => setOpenTutorial(true)}>GUIDE</span> before jumping into it!
 				</p>
+				<p>For testing the models, you can drag & drop the example picture from the guide!</p>
 				<div className={styles.models}>
 					<h2>Choose your model</h2>
 					<div className={styles.modelButtons}>
@@ -362,7 +364,7 @@ export default function Main() {
 						<li>Picture needs to be taken at the same level as the subject.</li>
 						<li>The entire subject needs to be in the frame.</li>
 					</ul>
-					<p>Look at the example picture under as a guide!</p>
+					<p>Look at the example picture under as a guide! You can also drop it into the drag & drop box to test!</p>
 				</div>
 				<Image
 					src={"/images/example-topstroke.webp"}
