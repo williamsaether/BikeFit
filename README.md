@@ -1,7 +1,7 @@
 # Bike Fitting Web Application
 
 Live App: https://bikefit.bysaether.com
-
+> It should be noted that the design and layout of the website is not entirely up to par, but the functionality works. The website is designed to demonstrate the research conducted under a tight deadline, not to look great.
 ## Project Overview
 This project aims to develop a web application that helps cyclists optimize their posture for better performance and injury prevention. The system will analyze images or videos of cyclists and provide feedback on their positioning.
 
