@@ -3,6 +3,7 @@ import {ReactNode} from "react";
 import {ModelProvider} from "@/context/ModelContext";
 import {Metadata} from "next";
 import styles from './layout.module.css'
+import { Analytics } from "@vercel/analytics/next"
 
 export const metadata: Metadata = {
 	title: "BikeFit",
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
 export default function RootLayout({children}: {children: ReactNode}) {
 	return (
 		<html lang="en">
+			<Analytics/>
 			<body>
 				<header className={styles.header}>
 					<nav>
