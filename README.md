@@ -25,8 +25,8 @@ This project aims to develop a web application that helps cyclists optimize thei
 ### 2. Posture Evaluation
 - A rule-based algorithm that calculates joint angles and determines whether the posture aligns with biomechanical guidelines (based on MyVeloFit guidelines).
 
-### 3. OpenAI API - GPT-4.0
-- Web app retrieves feedback from a GPT-4.0 model for user bike fit recommendations.
+### 3. OpenAI API - GPT-4o
+- Web app retrieves feedback from a GPT-4o-mini model for user bike fit recommendations.
 
 ## Future Enhancements
 - Fine-tuning the model with cyclist-specific data.
