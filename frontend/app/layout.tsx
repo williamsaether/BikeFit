@@ -32,6 +32,12 @@ export default function RootLayout({children}: {children: ReactNode}) {
 						{children}
 					</ModelProvider>
 				</main>
+				<footer className={styles.footer}>
+					<div className={styles.footerContent}>
+						<a>Bikefit - 2024<br />Last updated - 2026<br />Student project by Willam and Ole-Mathias</a>
+					</div>
+				</footer>
+				
 			</body>
 		</html>
 	)

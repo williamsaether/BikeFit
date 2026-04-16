@@ -26,6 +26,17 @@ export default function Main() {
 						</Link>
 					</div>
 				</div>
+				<div className={styles.rightContent}>
+					<img className={styles.heropic} src="./images/placeholder.jpeg"></img>
+				</div>
+			</section>
+			<section className={styles.whySection}>
+				<h2>Why Bikefit?</h2>
+				<ul>
+					<li>Injury Prevention</li>
+					<li>Enhanced Comfort</li>
+					<li>Increased Performance</li>
+				</ul>
 			</section>
 		</div>
 	);

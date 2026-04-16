@@ -29,6 +29,19 @@ export default function InfoPage() {
 			<p className={styles.footerNote}>
 				— Created by <a href={'https://github.com/williamsaether'} target={'_blank'}>William</a> and <a href={'https://github.com/omegeland'} target={'_blank'}>Ole-Mathias</a> from HVL, Spring 2025
 			</p>
+
+			<h2 className={styles.heading}>Team</h2>
+
+			<div className={styles.gridContainer}>
+				<div className={styles.person}>
+					<img className={styles.pic} src="/images/willeh.webp"></img>
+					<p className={styles.paragraph}>William Sæther<br />Developer</p>
+				</div>
+				<div className={styles.person}>
+					<img className={styles.pic} src="/images/olemathias.webp"></img>
+					<p className={styles.paragraph}>Ole-Mathias M. Egeland<br />Developer</p>
+				</div>
+			</div>
 		</main>
 	);
 }

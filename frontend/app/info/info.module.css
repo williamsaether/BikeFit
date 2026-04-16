@@ -27,3 +27,17 @@
 .footerNote a, .paragraph a {
 	color: var(--color-primary);
 }
+
+.gridContainer {
+	padding: 30px;
+	display: flex;
+	justify-content: space-evenly;
+}
+
+
+.pic {
+	width: 250px;
+	height: 250px;
+	border-radius: 0%;
+	object-fit: cover;
+}

@@ -15,6 +15,10 @@
 	height: 100%;
 }
 
+.header nav a:not(.headerButton):not(.headerTitle):hover {
+  text-decoration: underline;
+}
+
 .header div {
 	display: flex;
 	gap: 2em;
@@ -39,6 +43,26 @@
 	color: #fff !important;
 }
 
+.headerButton:hover {
+	background-color: var(--button-hover);
+}
+
 .main {
 	margin-top: 5em;
+}
+
+.footer {
+	border-top: 1px solid var(--color-secondary);
+	padding: 30px 0;
+	margin-top: 60px;
+	background: var(--color-secondary);
+}
+
+.footerContent {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 80px;
+  text-align: center;
+  font-size: 14px;
+  color: #fff;
 }
