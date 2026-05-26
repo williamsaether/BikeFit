@@ -3,31 +3,33 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.0",
-    "@mui/material": "^7.0.2",
+    "@emotion/styled": "^11.14.1",
+    "@mui/material": "^9.0.1",
     "@tensorflow/tfjs": "^4.22.0",
     "@tensorflow/tfjs-backend-webgl": "^4.22.0",
-    "@vercel/analytics": "^1.5.0",
+    "@vercel/analytics": "^2.0.1",
     "cropperjs": "^1.5.13",
-    "next": "^15.3.6",
-    "openai": "^4.96.0",
-    "react": "^19.0.0",
+    "next": "^16.2.6",
+    "openai": "^6.39.0",
+    "react": "^19.2.6",
     "react-cropper": "^2.3.3",
-    "react-dom": "^19.0.0",
-    "react-dropzone": "^14.3.8",
-    "react-easy-crop": "^5.4.1"
+    "react-dom": "^19.2.6",
+    "react-dropzone": "^15.0.0",
+    "react-easy-crop": "^5.5.7"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "^16.2.6",
     "typescript": "^5"
   }
 }

@@ -1,9 +1,5 @@
-import OpenAI from "openai";
 import {NextRequest, NextResponse} from "next/server";
-
-const openai = new OpenAI({
-	apiKey: process.env.OPENAI_API_KEY,
-})
+import OpenAI from "openai";
 
 const requestsPerIp = new Map<string, { count: number; lastReset: number }>()
 const MAX_REQUESTS = 5
@@ -75,6 +71,15 @@ function generatePrompt(
 }
 
 export async function POST(req: NextRequest) {
+	const apiKey = process.env.OPENAI_API_KEY
+
+	if (!apiKey) {
+		return NextResponse.json(
+			{ message: 'OPENAI_API_KEY is not configured' },
+			{ status: 500 }
+		)
+	}
+
 	const body = await req.json()
 	const { angles, context, goal, issue }: {
 		angles: Record<string, number>,
@@ -93,6 +98,7 @@ export async function POST(req: NextRequest) {
 	}
 
 	try {
+		const openai = new OpenAI({ apiKey })
 		const completion = await openai.chat.completions.create({
 			model: 'gpt-4o-mini',
 			messages: [{ role: 'user', content: generatePrompt(angles,context,goal,issue) }]
